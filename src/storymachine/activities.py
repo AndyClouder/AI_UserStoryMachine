@@ -15,6 +15,7 @@ from openai.types.responses import (
 
 from .ai import (
     get_prompt,
+    call_ai_api,
     call_openai_api,
     extract_reasoning_summaries,
     display_reasoning_summaries,
@@ -87,28 +88,59 @@ CREATE_STORIES_TOOL: ToolParam = {
 
 
 def parse_stories_from_response(response) -> List[Story]:
-    """Parse stories from OpenAI response."""
+    """Parse stories from AI response."""
     logger = get_logger()
-    stories = [
-        Story(**story_data)
-        for output in response.output
-        if output.type == "function_call"
-        for story_data in json.loads(output.arguments)["stories"]
-    ]
-    logger.info("stories_parsed", count=len(stories))
-    return stories
+
+    # If response is a string (from ZhipuAI), parse JSON from it
+    if isinstance(response, str):
+        try:
+            from .ai_zhipuai import parse_stories_from_zhipuai_response
+            stories_data = parse_stories_from_zhipuai_response(response)
+            stories = [Story(**story_data) for story_data in stories_data]
+            logger.info("stories_parsed_from_zhipuai", count=len(stories))
+            return stories
+        except Exception as e:
+            logger.error("failed_to_parse_zhipuai_response", error=str(e))
+            return []
+
+    # If response is an OpenAI Response object, parse it
+    if hasattr(response, 'output'):
+        stories = [
+            Story(**story_data)
+            for output in response.output
+            if hasattr(output, 'type') and output.type == "function_call"
+            for story_data in json.loads(output.arguments)["stories"]
+        ]
+        logger.info("stories_parsed_from_openai", count=len(stories))
+        return stories
+
+    logger.warning("unknown_response_type", response_type=type(response).__name__)
+    return []
 
 
 def parse_text_from_response(response) -> str:
-    """Parse text content from OpenAI response."""
-    text_content = ""
-    for item in response.output:
-        if isinstance(item, ResponseOutputMessage):
-            # ResponseOutputMessage has a 'content' field that contains text parts
-            for content_part in item.content:
-                if hasattr(content_part, "text"):
-                    text_content += content_part.text  # pyright: ignore[reportAttributeAccessIssue]
-    return text_content
+    """Parse text content from AI response."""
+    # If response is a string (from ZhipuAI), return as is
+    if isinstance(response, str):
+        return response
+
+    # If response is an OpenAI Response object, parse it
+    if hasattr(response, 'output'):
+        text_content = ""
+        for item in response.output:
+            if isinstance(item, ResponseOutputMessage):
+                # ResponseOutputMessage has a 'content' field that contains text parts
+                for content_part in item.content:
+                    if hasattr(content_part, "text"):
+                        text_content += content_part.text  # pyright: ignore[reportAttributeAccessIssue]
+        return text_content
+
+    # Fallback: try to get content directly
+    if hasattr(response, 'content'):
+        return response.content
+
+    # Last resort: convert to string
+    return str(response)
 
 
 async def get_codebase_context(workflow_input: WorkflowInput) -> str:
@@ -144,7 +176,7 @@ async def get_codebase_context(workflow_input: WorkflowInput) -> str:
         repo_structure=repo_structure,
     )
 
-    response = call_openai_api(prompt)
+    response = call_ai_api(prompt)
     questions = parse_text_from_response(response)
 
     logger.info("codebase_questions_generated", questions_length=len(questions))
@@ -177,22 +209,24 @@ def problem_break_down(
 
     if stories:
         # If stories exist, this is a revision - use iterating on stories prompt
-        prompt = get_prompt("iterating_on_stories.md", comments=comments)
+        prompt = get_prompt("iterating_on_stories_zh.md", comments=comments)
     else:
-        # Initial story generation - use full prompt template
+        # Initial story generation - use optimized Chinese prompt for ZhipuAI
         prompt = get_prompt(
-            "problem_break_down.md",
+            "problem_breakdown_zh_fixed.md",
             prd_content=workflow_input.prd_content,
             tech_spec_content=workflow_input.tech_spec_content,
             repo_context=workflow_input.repo_context or "",
         )
 
-    # Call OpenAI API and parse response
-    response = call_openai_api(prompt, [CREATE_STORIES_TOOL])
+    # Call AI API and parse response
+    # For ZhipuAI, don't pass tools to encourage direct JSON response
+    response = call_ai_api(prompt)
 
-    # Display reasoning summaries
-    reasoning_summaries = extract_reasoning_summaries(response)
-    display_reasoning_summaries(reasoning_summaries)
+    # Display reasoning summaries (only for OpenAI responses)
+    if not isinstance(response, str):
+        reasoning_summaries = extract_reasoning_summaries(response)
+        display_reasoning_summaries(reasoning_summaries)
 
     return parse_stories_from_response(response)
 
@@ -220,12 +254,14 @@ def enrich_context(
         repo_context=workflow_input.repo_context or "",
     )
 
-    # Call OpenAI API and parse response
-    response = call_openai_api(prompt, [CREATE_STORIES_TOOL])
+    # Call AI API and parse response
+    # For ZhipuAI, don't pass tools to encourage direct JSON response
+    response = call_ai_api(prompt)
 
-    # Display reasoning summaries
-    reasoning_summaries = extract_reasoning_summaries(response)
-    display_reasoning_summaries(reasoning_summaries)
+    # Display reasoning summaries (only for OpenAI responses)
+    if not isinstance(response, str):
+        reasoning_summaries = extract_reasoning_summaries(response)
+        display_reasoning_summaries(reasoning_summaries)
 
     updated_stories = parse_stories_from_response(response)
 
@@ -250,12 +286,14 @@ def define_acceptance_criteria(
         "acceptance_criteria.md", user_story=user_story_text, comments=comments
     )
 
-    # Call OpenAI API and parse response
-    response = call_openai_api(prompt, [CREATE_STORIES_TOOL])
+    # Call AI API and parse response
+    # For ZhipuAI, don't pass tools to encourage direct JSON response
+    response = call_ai_api(prompt)
 
-    # Display reasoning summaries
-    reasoning_summaries = extract_reasoning_summaries(response)
-    display_reasoning_summaries(reasoning_summaries)
+    # Display reasoning summaries (only for OpenAI responses)
+    if not isinstance(response, str):
+        reasoning_summaries = extract_reasoning_summaries(response)
+        display_reasoning_summaries(reasoning_summaries)
 
     updated_stories = parse_stories_from_response(response)
 

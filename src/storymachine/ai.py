@@ -1,8 +1,8 @@
-"""AI utilities and OpenAI abstraction for StoryMachine."""
+"""AI utilities abstraction for StoryMachine supporting multiple providers."""
 
 import time
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from openai import OpenAI
 from openai.types.responses import (
@@ -14,6 +14,19 @@ from openai.types.responses import (
 
 from .config import Settings
 from .logging import get_logger
+
+# Import ZhipuAI support
+try:
+    from .ai_zhipuai import (
+        call_zhipuai_api,
+        get_zhipu_client,
+        format_tools_for_zhipuai,
+        parse_stories_from_zhipuai_response,
+        ZhipuAIResponse
+    )
+    ZHIPUAI_AVAILABLE = True
+except ImportError:
+    ZHIPUAI_AVAILABLE = False
 
 # Global conversation state
 conversation_id: Optional[str] = None
@@ -60,7 +73,9 @@ def get_or_create_conversation() -> str:
 def get_prompt(filename: str, **kwargs: Any) -> str:
     """Load and format a prompt template from the prompts directory."""
     prompt_file = Path(__file__).parent / "prompts" / filename
-    prompt_template = prompt_file.read_text()
+    # Explicitly use UTF-8 encoding to handle Chinese characters
+    with open(prompt_file, 'r', encoding='utf-8') as f:
+        prompt_template = f.read()
     return prompt_template.format(**kwargs)
 
 
@@ -137,6 +152,26 @@ def display_reasoning_summaries(summaries: List[str]) -> None:
         print(summary)
     print("─" * 60)
     print()
+
+
+def call_ai_api(
+    prompt: str,
+    tools: Optional[List[ToolParam]] = None,
+) -> Union[Response, str]:
+    """Call AI API using the configured provider."""
+    settings = Settings()  # pyright: ignore[reportCallIssue]
+
+    if settings.api_provider == "zhipuai":
+        if not ZHIPUAI_AVAILABLE:
+            raise ImportError("ZhipuAI is not available. Install with: pip install zhipuai")
+        if not settings.zhipuai_api_key:
+            raise ValueError("ZhipuAI API key is required when using ZhipuAI provider")
+        return call_zhipuai_api(prompt, tools)
+    else:
+        # Default to OpenAI
+        if not settings.openai_api_key:
+            raise ValueError("OpenAI API key is required when using OpenAI provider")
+        return call_openai_api(prompt, tools)
 
 
 def call_openai_api(
