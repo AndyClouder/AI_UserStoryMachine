@@ -1,97 +1,53 @@
-# StoryMachine
+# AIPM User Story Machine
 
-StoryMachine is a CLI tool that generates context-enriched user stories from Product Requirements Documents (PRDs) and Technical Specifications using AI-powered processing.
+基于StoryMachine的AI产品需求管理系统，支持智谱AI集成和中文本地化。
 
-> No more machine, that meant no more pictures, no more stories.
-Elliot was blue.
-Until he found something else, and that’s when he realised something very important…
-it wasn’t the machine that was making stories… it was him.
-… and he was really rather good at it.
+## 主要功能
 
-From [Tom McLaughlin's book, The Story Machine](https://www.youtube.com/watch?v=yXVqCCeCPAU&t=9s).
+- 🤖 智谱AI集成，支持用户故事自动生成
+- 🇨🇳 完整的中文语言支持
+- 📝 从PRD文档自动生成用户故事
+- 🔧 详细的验收标准生成
+- 📊 项目上下文感知
 
+## 快速开始
 
-## Features
+1. 安装依赖：
+   ```bash
+   uv sync
+   ```
 
-- Generate user stories from PRD and technical specification documents
-- AI-powered context enrichment for better story understanding
-- CLI interface for easy access and integration into workflows
-- Structured output with acceptance criteria following best practices
+2. 配置智谱AI：
+   ```bash
+   cp .env.example .env
+   # 编辑.env文件，添加您的智谱AI API密钥
+   ```
 
-## Installation
+3. 运行程序：
+   ```bash
+   uv run storymachine --prd "prd/您的PRD文档.md"
+   ```
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd storymachine
-```
+## 特色功能
 
-2. Install dependencies using uv (required):
-```bash
-uv sync
-```
+- 🎯 智能故事分解和优先级排序
+- 📋 自动生成验收标准
+- 🔄 迭代式故事优化
+- 🌐 中文提示词优化
+- 🐛 详细的调试和错误处理
 
-3. Set up your API keys in a `.env` file:
-```bash
-echo "OPENAI_API_KEY=your-api-key-here" > .env
-# For GitHub repositories:
-echo "GITHUB_TOKEN=ghp_your_token_here" >> .env
-# For GitLab repositories:
-echo "GITLAB_TOKEN=glpat_your_token_here" >> .env
-```
+## 技术栈
 
-   **Token Requirements:**
-   - **GitHub**: Create a Personal Access Token with `repo` scope (Settings → Developer settings → Personal access tokens)
-   - **GitLab**: Create a Personal Access Token with `read_api` and `read_repository` scopes (User Settings → Access Tokens)
-
-## Usage
-
-Run StoryMachine with your PRD, technical specification, and repository URL:
-
-**For GitHub repositories:**
-```bash
-uv run storymachine --prd path/to/your/prd.md --tech-spec path/to/your/tech-spec.md --repo https://github.com/owner/repo
-```
-
-**For GitLab repositories:**
-```bash
-uv run storymachine --prd path/to/your/prd.md --tech-spec path/to/your/tech-spec.md --repo https://gitlab.com/owner/repo
-```
-
-The tool will generate user stories with acceptance criteria based on the provided documents, work with your feedback through a workflow, and output well specified stories to the console.
-
-## Development
-
-This project uses:
 - Python 3.13+
-- uv for package management
-- OpenAI API for story generation
-- pydantic-settings for configuration
+- 智谱AI API
+- UV包管理器
+- 异步处理
 
-### Code Quality
+## 贡献
 
-Follow the guidelines in AGENTS.md:
-- Use uv for package management
-- Maintain type hints for all code
-- Follow existing patterns exactly
-- Run formatters before committing
+欢迎提交Issue和Pull Request！
 
-### Running Tests
+## 许可证
 
-```bash
-uv run --frozen pytest
-```
+MIT License
 
-## Example Output
-
-StoryMachine generates stories in the following format:
-
-```
-Title: Generate user stories from PRD and technical specifications
-
-Acceptance Criteria:
-- The system should parse PRD documents in markdown format
-- The system should parse technical specification documents in markdown format
-- The system should generate user stories with clear titles
-- Each user story should include relevant acceptance criteria
-```
