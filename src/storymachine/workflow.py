@@ -22,14 +22,19 @@ async def w1(workflow_input: WorkflowInput) -> List[Story]:
     logger = get_logger()
     logger.info("workflow_started")
 
-    # Get codebase context questions
-    print("\n--- Getting Codebase Context ---\n")
-    with spinner("Analyzing codebase needs"):
-        workflow_input.repo_context = await get_codebase_context(workflow_input)
+    # Get codebase context questions (only if repo URL is provided)
+    if workflow_input.repo_url:
+        print("\n--- Getting Codebase Context ---\n")
+        with spinner("Analyzing codebase needs"):
+            workflow_input.repo_context = await get_codebase_context(workflow_input)
 
-    logger.info(
-        "codebase_context_obtained", context_length=len(workflow_input.repo_context)
-    )
+        logger.info(
+            "codebase_context_obtained", context_length=len(workflow_input.repo_context)
+        )
+    else:
+        workflow_input.repo_context = ""
+        print("\n--- Skipping Codebase Context (no repository provided) ---\n")
+        logger.info("codebase_context_skipped", reason="no_repo_url")
 
     # Set default empty states
     stories: List[Story] = []

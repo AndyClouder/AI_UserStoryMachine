@@ -21,21 +21,20 @@ class TestSettings:
 
         assert settings.openai_api_key == test_key
 
-    def test_settings_missing_api_key_raises_validation_error(
+    def test_settings_missing_both_api_keys_raises_validation_error(
         self, monkeypatch, tmp_path: Path
     ) -> None:
-        """Test that missing API key raises ValidationError."""
+        """Test that missing both API keys raises ValidationError."""
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+        monkeypatch.delenv("ZHIPUAI_API_KEY", raising=False)
 
         # Change to temp directory to avoid loading project .env file
         original_cwd = os.getcwd()
         try:
-            os.chdir(tmp_path)
-            with pytest.raises(ValidationError) as exc_info:
-                Settings()  # pyright: ignore[reportCallIssue]
-
-            error_str = str(exc_info.value)
-            assert "OPENAI_API_KEY" in error_str or "Field required" in error_str
+            # This should work because API keys are optional now
+            settings = Settings()  # pyright: ignore[reportCallIssue]
+            assert settings.openai_api_key is None
+            assert settings.zhipuai_api_key is None
         finally:
             os.chdir(original_cwd)
 
@@ -105,9 +104,9 @@ class TestSettings:
         original_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
-            with pytest.raises(ValidationError):
-                # Should fail because OPENAI_API_KEY is not set
-                Settings()  # pyright: ignore[reportCallIssue]
+            # This should work because API keys are optional now
+            settings = Settings()  # pyright: ignore[reportCallIssue]
+            assert settings.openai_api_key is None
         finally:
             os.chdir(original_cwd)
 
@@ -139,7 +138,7 @@ class TestSettings:
             os.chdir(tmp_path)
             settings = Settings()  # pyright: ignore[reportCallIssue]
 
-            assert settings.model == "gpt-5"
+            assert settings.model == "glm-4-flash"
         finally:
             os.chdir(original_cwd)
 
