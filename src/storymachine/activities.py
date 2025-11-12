@@ -96,7 +96,38 @@ def parse_stories_from_response(response) -> List[Story]:
         try:
             from .ai_zhipuai import parse_stories_from_zhipuai_response
             stories_data = parse_stories_from_zhipuai_response(response)
-            stories = [Story(**story_data) for story_data in stories_data]
+
+            # Safely create Story objects with only the fields that exist
+            stories = []
+            for story_data in stories_data:
+                try:
+                    # Extract only the fields that Story class expects
+                    story_kwargs = {
+                        'title': story_data.get('title', '未命名故事'),
+                        'acceptance_criteria': story_data.get('acceptance_criteria', []),
+                        'enriched_context': story_data.get('enriched_context')
+                    }
+
+                    # Create Story object safely
+                    story = Story(**story_kwargs)
+
+                    # Add additional fields as attributes for web version
+                    if hasattr(story_data, 'description') or 'description' in story_data:
+                        story.description = story_data.get('description', '')
+                    if hasattr(story_data, 'role') or 'role' in story_data:
+                        story.role = story_data.get('role', '用户')
+                    if hasattr(story_data, 'goal') or 'goal' in story_data:
+                        story.goal = story_data.get('goal', '完成目标')
+                    if hasattr(story_data, 'summary') or 'summary' in story_data:
+                        story.summary = story_data.get('summary', '')
+
+                    stories.append(story)
+
+                except Exception as story_error:
+                    logger.error("failed_to_create_story", story_data=story_data, error=str(story_error))
+                    # Skip this story but continue with others
+                    continue
+
             logger.info("stories_parsed_from_zhipuai", count=len(stories))
             return stories
         except Exception as e:
