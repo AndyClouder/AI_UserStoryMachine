@@ -1,0 +1,76 @@
+<!--pages/question/question.wxml-->
+<view class="container">
+  <!-- 搜索框 -->
+  <view class="search-section">
+    <view class="search-box">
+      <icon type="search" size="16"></icon>
+      <input
+        class="search-input"
+        placeholder="搜索题目..."
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        confirm-type="search"
+        bindconfirm="onSearch"
+      />
+    </view>
+  </view>
+
+  <!-- 题目列表 -->
+  <scroll-view class="question-list" scroll-y="{{true}}">
+    <block wx:for="{{filteredQuestions}}" wx:key="id">
+      <view class="question-card">
+        <view class="question-title">{{index + 1}}. {{item.title}}</view>
+        <view class="question-options">
+          <view
+            class="option-item"
+            wx:for="{{item.options}}"
+            wx:for-item="option"
+            wx:for-index="optionIndex"
+            wx:key="optionIndex"
+            bindtap="selectOption"
+            data-question-id="{{item.id}}"
+            data-option-index="{{optionIndex}}"
+          >
+            <view class="option-radio {{selectedAnswers[item.id] === optionIndex ? 'selected' : ''}}">
+              {{selectedAnswers[item.id] === optionIndex ? '✓' : ''}}
+            </view>
+            <text>{{String.fromCharCode(65 + optionIndex)}}. {{option}}</text>
+          </view>
+        </view>
+
+        <!-- 显示答案和解析 -->
+        <view class="answer-section" wx:if="{{showAnswer[item.id]}}">
+          <view class="correct-answer">
+            正确答案：{{String.fromCharCode(65 + item.answer)}}
+          </view>
+          <view class="explanation">
+            {{item.explanation}}
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="action-buttons">
+          <button
+            class="btn btn-primary"
+            bindtap="showAnswer"
+            data-question-id="{{item.id}}"
+          >
+            {{showAnswer[item.id] ? '隐藏答案' : '查看答案'}}
+          </button>
+          <button
+            class="btn btn-secondary {{isFavorite(item.id) ? 'favorited' : ''}}"
+            bindtap="toggleFavorite"
+            data-question-id="{{item.id}}"
+          >
+            {{isFavorite(item.id) ? '取消收藏' : '收藏'}}
+          </button>
+        </view>
+      </view>
+    </block>
+
+    <!-- 无结果提示 -->
+    <view class="no-result" wx:if="{{filteredQuestions.length === 0}}">
+      <text>没有找到相关题目</text>
+    </view>
+  </scroll-view>
+</view>

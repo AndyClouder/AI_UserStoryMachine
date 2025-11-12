@@ -1,0 +1,3 @@
+[submodule "storymachine"]
+	path = storymachine
+	url = https://github.com/AndyClouder/AI_UserStoryMachine.git

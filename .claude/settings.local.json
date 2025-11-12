@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(git init:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run --frozen pytest:*)",
+      "Bash(uv run storymachine --help:*)",
+      "Bash(uv run storymachine:*)",
+      "Bash(cat:*)",
+      "Bash(python -m py_compile:*)",
+      "Bash(python:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote add:*)",
+      "Bash(curl:*)",
+      "Bash(echo \"# AIPM User Story Machine\n\n基于StoryMachine的AI产品需求管理系统，支持智谱AI集成和中文本地化。\n\n## 主要功能\n\n- 🤖 智谱AI集成，支持用户故事自动生成\n- 🇨🇳 完整的中文语言支持\n- 📝 从PRD文档自动生成用户故事\n- 🔧 详细的验收标准生成\n- 📊 项目上下文感知\n\n## 快速开始\n\n1. 安装依赖：\n   \\`\\`\\`bash\n   uv sync\n   \\`\\`\\`\n\n2. 配置智谱AI：\n   \\`\\`\\`bash\n   cp .env.example .env\n   # 编辑.env文件，添加您的智谱AI API密钥\n   \\`\\`\\`\n\n3. 运行程序：\n   \\`\\`\\`bash\n   uv run storymachine --prd \"\"prd/您的PRD文档.md\"\"\n   \\`\\`\\`\n\n## 特色功能\n\n- 🎯 智能故事分解和优先级排序\n- 📋 自动生成验收标准\n- 🔄 迭代式故事优化\n- 🌐 中文提示词优化\n- 🐛 详细的调试和错误处理\n\n## 技术栈\n\n- Python 3.13+\n- 智谱AI API\n- UV包管理器\n- 异步处理\n\n## 贡献\n\n欢迎提交Issue和Pull Request！\n\n## 许可证\n\nMIT License\n\")",
+      "Bash(README.md)",
+      "Bash(git remote set-url:*)",
+      "Bash(git reset:*)",
+      "Bash(uv run python:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell \"Stop-Process -Id 39812 -Force\")",
+      "Bash(git rm:*)",
+      "Bash(git submodule add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

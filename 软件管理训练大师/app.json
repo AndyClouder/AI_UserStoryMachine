@@ -1,0 +1,34 @@
+{
+  "pages": [
+    "pages/question/question",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "题库大师",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/question/question",
+        "iconPath": "images/icon_question.svg",
+        "selectedIconPath": "images/icon_question_active.svg",
+        "text": "题库"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "iconPath": "images/icon_profile.svg",
+        "selectedIconPath": "images/icon_profile_active.svg",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

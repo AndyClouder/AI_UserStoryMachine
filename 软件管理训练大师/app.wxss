@@ -1,0 +1,137 @@
+/**app.wxss**/
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+}
+
+/* 全局样式 */
+page {
+  background-color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 搜索框样式 */
+.search-box {
+  width: 90%;
+  height: 80rpx;
+  background: #fff;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  margin: 20rpx auto;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  flex: 1;
+  height: 60rpx;
+  font-size: 28rpx;
+  margin-left: 20rpx;
+}
+
+/* 题目卡片样式 */
+.question-card {
+  width: 90%;
+  background: #fff;
+  border-radius: 20rpx;
+  margin: 20rpx auto;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.question-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.question-options {
+  margin-top: 20rpx;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  margin: 15rpx 0;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.option-radio {
+  width: 40rpx;
+  height: 40rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+/* 按钮样式 */
+.btn {
+  background: #3cc51f;
+  color: #fff;
+  border-radius: 10rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  margin: 10rpx;
+}
+
+.btn-primary {
+  background: #3cc51f;
+}
+
+.btn-secondary {
+  background: #999;
+}
+
+/* 用户头像和信息 */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+}
+
+.nickname {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 功能列表 */
+.function-list {
+  width: 90%;
+  margin: 20rpx auto;
+}
+
+.function-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 30rpx;
+  border-radius: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.function-title {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.function-arrow {
+  color: #999;
+}

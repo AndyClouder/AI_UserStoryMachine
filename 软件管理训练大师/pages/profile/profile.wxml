@@ -1,0 +1,103 @@
+<!--pages/profile/profile.wxml-->
+<view class="container">
+  <!-- 用户信息区域 -->
+  <view class="user-section">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <text class="nickname">{{userInfo.nickName}}</text>
+    </view>
+  </view>
+
+  <!-- 功能列表区域 -->
+  <scroll-view class="function-section" scroll-y="{{true}}">
+    <!-- 题目收藏 -->
+    <view class="function-card">
+      <view class="card-header">
+        <text class="card-title">题目收藏</text>
+        <text class="card-count">({{favoriteQuestions.length}})</text>
+      </view>
+
+      <view class="favorite-list" wx:if="{{favoriteQuestions.length > 0}}">
+        <view
+          class="favorite-item"
+          wx:for="{{favoriteQuestions}}"
+          wx:key="id"
+          bindtap="goToQuestion"
+          data-question-id="{{item.id}}"
+        >
+          <view class="item-index">{{index + 1}}</view>
+          <view class="item-content">
+            <text class="item-title">{{item.title}}</text>
+          </view>
+          <view class="item-arrow">></view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:else>
+        <text>暂无收藏题目</text>
+      </view>
+    </view>
+
+    <!-- 历史记录 -->
+    <view class="function-card">
+      <view class="card-header">
+        <text class="card-title">历史记录</text>
+        <text class="card-count">({{historyQuestions.length}})</text>
+      </view>
+
+      <view class="history-list" wx:if="{{historyQuestions.length > 0}}">
+        <view
+          class="history-item"
+          wx:for="{{historyQuestions}}"
+          wx:key="id"
+          bindtap="goToQuestion"
+          data-question-id="{{item.id}}"
+        >
+          <view class="item-index">{{index + 1}}</view>
+          <view class="item-content">
+            <text class="item-title">{{item.title}}</text>
+          </view>
+          <view class="item-arrow">></view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:else>
+        <text>暂无答题记录</text>
+      </view>
+    </view>
+
+    <!-- 统计信息 -->
+    <view class="function-card">
+      <view class="card-header">
+        <text class="card-title">学习统计</text>
+      </view>
+
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-number">{{totalQuestions}}</text>
+          <text class="stat-label">总题数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{favoriteQuestions.length}}</text>
+          <text class="stat-label">收藏数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{historyQuestions.length}}</text>
+          <text class="stat-label">答题数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{completionRate}}%</text>
+          <text class="stat-label">完成率</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 清除记录 -->
+    <view class="function-card">
+      <view class="clear-buttons">
+        <button class="btn-clear" bindtap="clearFavorites">清除收藏</button>
+        <button class="btn-clear" bindtap="clearHistory">清除历史</button>
+      </view>
+    </view>
+  </scroll-view>
+</view>
