@@ -22,8 +22,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 添加storymachine模块到Python路径
-sys.path.insert(0, str(Path(__file__).parent / "storymachine" / "src"))
+# 移除storymachine模块依赖，使用独立的实现
 
 app = FastAPI(
     title="AI User Story Machine",

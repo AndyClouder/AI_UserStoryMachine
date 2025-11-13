@@ -32,7 +32,10 @@
       "Bash(TEST_FIXES.md)",
       "Bash(CHINESE_FIXES.md)",
       "Bash(find:*)",
-      "Bash(chcp:*)"
+      "Bash(chcp:*)",
+      "Bash(git checkout:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)"
     ],
     "deny": [],
     "ask": []

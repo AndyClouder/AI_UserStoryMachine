@@ -1,0 +1,11 @@
+# Ignore StoryMachine submodule to avoid dependency conflicts
+storymachine/
+
+# Ignore cache directories
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
