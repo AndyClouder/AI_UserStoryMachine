@@ -1,11 +1,22 @@
 # Ignore StoryMachine submodule to avoid dependency conflicts
 storymachine/
+storymachine/**
+
+# Ignore all Python project files from submodule
+**/storymachine/**/pyproject.toml
+**/storymachine/**/uv.lock
+**/storymachine/**/.venv
 
 # Ignore cache directories
 __pycache__/
 *.pyc
 .pytest_cache/
+.venv/
 
 # Ignore OS files
 .DS_Store
 Thumbs.db
+
+# Ignore git submodule files
+.git/modules/
+.gitmodules
