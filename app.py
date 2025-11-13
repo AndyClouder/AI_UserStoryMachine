@@ -419,8 +419,12 @@ async def process_story_generation(task_id: str, prd_content: str, tech_spec_con
             "stories": []
         }
 
+# 获取端口号，兼容多个平台
+port = int(os.environ.get("PORT", 8000))
+
 # Vercel入口点
 handler = app
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    logger.info(f"Starting AI User Story Machine on port {port}")
+    uvicorn.run(app, host="0.0.0.0", port=port)
