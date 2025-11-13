@@ -1,0 +1,8 @@
+fastapi>=0.116.1
+uvicorn[standard]>=0.30.0
+pydantic-settings>=2.10.1
+structlog>=25.4.0
+zhipuai>=2.0.0
+openai>=0.100.2
+python-fasthtml>=0.12.25
+websockets>=15.0.1
