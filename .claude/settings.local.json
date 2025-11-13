@@ -25,7 +25,14 @@
       "Bash(taskkill:*)",
       "Bash(powershell \"Stop-Process -Id 39812 -Force\")",
       "Bash(git rm:*)",
-      "Bash(git submodule add:*)"
+      "Bash(git submodule add:*)",
+      "Bash(cmd /c \"taskkill /PID 42832 /F\")",
+      "Bash(git log:*)",
+      "Bash(echo:*)",
+      "Bash(TEST_FIXES.md)",
+      "Bash(CHINESE_FIXES.md)",
+      "Bash(find:*)",
+      "Bash(chcp:*)"
     ],
     "deny": [],
     "ask": []
